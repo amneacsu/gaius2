@@ -1,4 +1,5 @@
 export { Component } from './Component';
-export { ComponentStore } from './ComponentStore';
 export { Entity } from './Entity';
+export { Query } from './Query';
 export { System } from './System';
+export { World } from './World';
