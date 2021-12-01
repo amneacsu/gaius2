@@ -1,12 +1,11 @@
 import { System, Query } from '../ecs';
 
 import { Rng } from '../core/Rng';
+import { Sprite } from '../core/Sprite';
 import {
   MapDataComponent,
   FrameComponent,
 } from '../components';
-
-import { SpriteSystem } from './SpriteSystem';
 
 const spriteSize = 64;
 const halfSprite = spriteSize * .5;
@@ -29,12 +28,9 @@ const generateMapData = (width: number, height: number) => {
 };
 
 export class MapSystem extends System {
-  spriteSystem: SpriteSystem;
   mapsQuery: Query;
 
   init() {
-    this.spriteSystem = this.world.getSystem(SpriteSystem)!;
-
     this.mapsQuery = new Query((entity) => entity.has(MapDataComponent) && entity.has(FrameComponent));
     this.world.registerQuery(this.mapsQuery);
 
@@ -79,10 +75,9 @@ export class MapSystem extends System {
         if (newX < -spriteSize || newX > (spriteSize + frame.w)) return;
         if (newY < -spriteSize || newY > (spriteSize + frame.h)) return;
 
-        const spriteData = this.spriteSystem.getSpriteData('iso-64x64-building.png', value.type);
-        if (spriteData) {
-          surface.drawSpriteData(spriteData, newX, newY);
-        }
+        const sprite = new Sprite('map1', value.type);
+        // const sprite = new Sprite();
+        surface.drawSpriteData(sprite.data, newX, newY);
       });
     });
   }

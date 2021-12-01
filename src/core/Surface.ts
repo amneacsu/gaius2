@@ -18,7 +18,9 @@ export class Surface {
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  drawSpriteData(spriteData: ImageBitmap, x: number, y: number) {
-    this.context.drawImage(spriteData, x, y);
+  drawSpriteData(spriteData: Promise<ImageBitmap>, x: number, y: number) {
+    spriteData.then((data) => {
+      this.context.drawImage(data, x, y);
+    });
   }
 }

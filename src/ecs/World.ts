@@ -27,12 +27,6 @@ export class World {
     return this;
   }
 
-  getSystem<T extends typeof System>(systemClass: T): T['prototype'] | undefined {
-    return this.systems.find((system) => {
-      return system instanceof systemClass;
-    });
-  }
-
   registerQuery(query: Query) {
     this.queries.push(query);
   }
