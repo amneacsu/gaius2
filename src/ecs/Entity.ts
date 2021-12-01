@@ -40,4 +40,10 @@ export class Entity {
       return component instanceof componentClass;
     }) as T;
   }
+
+  withComponent<T>(componentClass: Class<T>, callback: (component: T) => void) {
+    this.components.forEach((component) => {
+      if (component instanceof componentClass) callback(component);
+    });
+  }
 }

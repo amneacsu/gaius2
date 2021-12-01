@@ -45,10 +45,9 @@ export class RendererSystem extends System {
     this.context.fillStyle = '#f00';
 
     this.positionQuery.entities.forEach((entity) => {
-      const pos = entity.getComponent(PositionComponent);
-      if (pos) {
+      entity.withComponent(PositionComponent, (pos) => {
         this.drawSprite('iso-64x64-building.png', 0, pos.x, pos.y);
-      }
+      });
     });
   }
 

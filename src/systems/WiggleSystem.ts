@@ -16,9 +16,10 @@ export class WiggleSystem extends System {
   execute() {
     this.wiggleQuery.entities.forEach((entity) => {
       const rng = this.world.getSystem(RngSystem)!.rng;
-      const position = entity.getComponent(ScreenPositionComponent)!;
-      position.x += rng.int(-1, 1);
-      position.y += rng.int(-1, 1);
+      entity.withComponent(ScreenPositionComponent, (position) => {
+        position.x += rng.int(-1, 1);
+        position.y += rng.int(-1, 1);
+      });
     });
   }
 };

@@ -4,7 +4,6 @@ import { RngSystem } from './systems/RngSystem';
 import { SpriteSystem } from './systems/SpriteSystem';
 import { RendererSystem } from './systems/RendererSystem';
 import { MapSystem } from './systems/MapSystem';
-import { MouseSystem } from './systems/MouseSystem';
 import { KeyboardSystem } from './systems/KeyboardSystem';
 import { WiggleSystem } from './systems/WiggleSystem';
 
@@ -16,8 +15,7 @@ world
   .registerSystem(new RendererSystem)
   .registerSystem(new WiggleSystem)
   .registerSystem(new MapSystem)
-  .registerSystem(new KeyboardSystem)
-  .registerSystem(new MouseSystem);
+  .registerSystem(new KeyboardSystem);
 
 setInterval(() => {
   world.execute();

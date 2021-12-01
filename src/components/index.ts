@@ -1,4 +1,3 @@
-export { MouseComponent } from './MouseComponent';
 export { FrameComponent } from './FrameComponent';
 export { MapDataComponent } from './MapDataComponent';
 export { ScreenPositionComponent } from './ScreenPositionComponent';

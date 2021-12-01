@@ -1,5 +1,6 @@
 import { Entity } from './Entity';
-import { QueryPredicate } from './types';
+
+export type QueryPredicate = (entity: Entity) => boolean;
 
 export class Query {
   predicate: QueryPredicate;

@@ -1,7 +1,7 @@
 export class Rng {
   seed: number;
 
-  constructor(seed: number) {
+  constructor(seed?: number) {
     this.seed = seed ?? Math.random();
   }
 
