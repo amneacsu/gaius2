@@ -1,4 +1,5 @@
 import { Component } from '../ecs';
+import { Surface } from '../core/Surface';
 
 type FrameComponentData = {
   x: number;
@@ -12,6 +13,7 @@ export class FrameComponent extends Component {
   y: number;
   w: number;
   h: number;
+  surface: Surface;
 
   constructor(data: FrameComponentData) {
     super();
@@ -19,5 +21,7 @@ export class FrameComponent extends Component {
     this.y = data.y;
     this.w = data.w;
     this.h = data.h;
+
+    this.surface = new Surface(data.w, data.h);
   }
 }

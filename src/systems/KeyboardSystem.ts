@@ -18,33 +18,21 @@ export class KeyboardSystem extends System {
     });
 
     this.world.registerQuery(this.mapViewQuery);
+
+    window.addEventListener('keydown', (event) => {
+      if (this.keyDown.hasOwnProperty(event.code)) {
+        this.keyDown[event.code] = true;
+      }
+    });
+
+    window.addEventListener('keyup', (event) => {
+      if (this.keyDown.hasOwnProperty(event.code)) {
+        this.keyDown[event.code] = false;
+      }
+    });
   }
 
   execute() {
-    this.mapViewQuery.added.forEach((entity) => {
-      window.addEventListener('keydown', (event) => {
-        if (this.keyDown.hasOwnProperty(event.code)) {
-          this.keyDown[event.code] = true;
-        } else {
-          switch (event.code) {
-            case 'Space':
-              entity.withComponent(MapDataComponent, (map) => {
-                const index = Math.round(map.originX) + Math.round(map.originY) * map.width;
-                const current = map.data[index].type;
-                map.data[index].type = current === 0 ? 2 : 0;
-              });
-              break;
-          }
-        }
-      });
-
-      window.addEventListener('keyup', (event) => {
-        if (this.keyDown.hasOwnProperty(event.code)) {
-          this.keyDown[event.code] = false;
-        }
-      });
-    });
-
     this.mapViewQuery.entities.forEach((entity) => {
       entity.withComponent(MapDataComponent, (map) => {
         let deltaX = 0;

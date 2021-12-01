@@ -1,51 +1,51 @@
 import { System, Query } from '../ecs';
 
-import { Surface } from '../core/Surface';
+import { Rng } from '../core/Rng';
 import {
   MapDataComponent,
   FrameComponent,
 } from '../components';
 
-import { RngSystem } from './RngSystem';
-import { RendererSystem } from './RendererSystem';
 import { SpriteSystem } from './SpriteSystem';
 
 const spriteSize = 64;
 const halfSprite = spriteSize * .5;
 const quarterSprite = spriteSize * .25;
 
+const generateMapData = (width: number, height: number) => {
+  const rng = new Rng();
+  const data = [];
+  for (let index = 0; index < width * height; index += 1) {
+    const x = index % width;
+    const y = ~~(index / width);
+    data.push({
+      x,
+      y,
+      type: rng.sample([0, 2]),
+    });
+  }
+
+  return data;
+};
+
 export class MapSystem extends System {
-  renderer: RendererSystem;
   spriteSystem: SpriteSystem;
   mapsQuery: Query;
 
-  surfaces: (Surface | undefined)[] = [];
-
   init() {
-    this.renderer = this.world.getSystem(RendererSystem)!;
     this.spriteSystem = this.world.getSystem(SpriteSystem)!;
 
     this.mapsQuery = new Query((entity) => entity.has(MapDataComponent) && entity.has(FrameComponent));
     this.world.registerQuery(this.mapsQuery);
 
-    const rng = this.world.getSystem(RngSystem)!.rng;
-    const width = 480;
-    const height = 320;
-    const data = [];
-    for (let index = 0; index < width * height; index += 1) {
-      const x = index % width;
-      const y = ~~(index / width);
-      data.push({
-        x,
-        y,
-        type: rng.sample([0, 2]),
-      });
-    }
+    const width = 16;
+    const height = 16;
+    const data = generateMapData(width, height);
 
     this.world.createEntity()
       .addComponent(new FrameComponent({
-        x: 200,
-        y: 10,
+        x: 0,
+        y: 0,
         w: 600,
         h: 576,
       }))
@@ -59,25 +59,16 @@ export class MapSystem extends System {
   }
 
   execute() {
-    this.mapsQuery.added.forEach((entity) => {
-      entity.withComponent(FrameComponent, (frame) => {
-        this.surfaces[entity.id] = new Surface(frame.w, frame.h);
-      });
-    });
-
-    this.mapsQuery.removed.forEach((entity) => {
-      this.surfaces[entity.id] = undefined;
-    });
-
     this.mapsQuery.entities.forEach((entity) => {
-      const surface = this.surfaces[entity.id]!;
-      surface.clear();
       const mapData = entity.getComponent(MapDataComponent)!;
       const { data, originX, originY } = mapData;
 
       const frame = entity.getComponent(FrameComponent)!;
+      const surface = frame.surface;
       const halfFrameWidth = frame.w / 2;
       const halfFrameHeight = frame.h / 2;
+
+      surface.clear();
 
       data.forEach((value) => {
         const x = value.x - originX;
@@ -88,13 +79,11 @@ export class MapSystem extends System {
         if (newX < -spriteSize || newX > (spriteSize + frame.w)) return;
         if (newY < -spriteSize || newY > (spriteSize + frame.h)) return;
 
-        const spriteIndex = value.type;
-
-        this.spriteSystem.drawSprite(surface.context, 'iso-64x64-building.png', spriteIndex, newX, newY);
+        const spriteData = this.spriteSystem.getSpriteData('iso-64x64-building.png', value.type);
+        if (spriteData) {
+          surface.drawSpriteData(spriteData, newX, newY);
+        }
       });
-
-      this.renderer.drawBackground();
-      this.renderer.context.drawImage(surface.canvas, frame.x, frame.y);
     });
   }
 }
