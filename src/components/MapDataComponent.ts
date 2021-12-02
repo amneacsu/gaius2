@@ -8,8 +8,6 @@ type MapDataComponentData = {
   }[];
   height: number;
   width: number;
-  originX: number;
-  originY: number;
 };
 
 export class MapDataComponent extends Component {
@@ -20,15 +18,11 @@ export class MapDataComponent extends Component {
   }[];
   height: number;
   width: number;
-  originX: number;
-  originY: number;
 
   constructor(data: MapDataComponentData) {
     super();
     this.data = data.data;
     this.height = data.height;
     this.width = data.width;
-    this.originX = data.originX;
-    this.originY = data.originY;
   }
 }

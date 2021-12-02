@@ -3,6 +3,7 @@ import { System, Query } from '../ecs';
 import { Rng } from '../core/Rng';
 import { Sprite } from '../core/Sprite';
 import {
+  MapCameraComponent,
   MapDataComponent,
   FrameComponent,
 } from '../components';
@@ -46,18 +47,23 @@ export class MapSystem extends System {
         h: 576,
       }))
       .addComponent(new MapDataComponent({
-        originX: 8,
-        originY: 8,
         width,
         height,
         data,
+      }))
+      .addComponent(new MapCameraComponent({
+        originX: 8,
+        originY: 8,
       }));
   }
 
   execute() {
     this.mapsQuery.entities.forEach((entity) => {
       const mapData = entity.getComponent(MapDataComponent)!;
-      const { data, originX, originY } = mapData;
+      const { data } = mapData;
+
+      const mapCamera = entity.getComponent(MapCameraComponent)!;
+      const { originX, originY } = mapCamera;
 
       const frame = entity.getComponent(FrameComponent)!;
       const surface = frame.surface;
@@ -76,7 +82,6 @@ export class MapSystem extends System {
         if (newY < -spriteSize || newY > (spriteSize + frame.h)) return;
 
         const sprite = new Sprite('map1', value.type);
-        // const sprite = new Sprite();
         surface.drawSpriteData(sprite.data, newX, newY);
       });
     });
