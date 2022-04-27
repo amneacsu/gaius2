@@ -41,9 +41,6 @@ class SpriteStore {
 
     if (data) {
       return data.data;
-    } else {
-      console.log('f');
-
     }
 
     return this.getSpriteSheetImage(sheetPreset.src)
