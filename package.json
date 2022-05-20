@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "lint": "eslint src --ext ts",
-    "start": "concurrently --raw \"npm run serve\" \"npm run watch\"",
+    "start": "concurrently --raw \"npm run serve\" \"npm run watch\" \"npm run compile\"",
+    "compile": "tsc --watch --preserveWatchOutput --noEmit",
     "serve": "http-server ./",
     "watch": "esbuild src/index.ts --bundle --outfile=build/index.js --sourcemap --watch",
     "build": "esbuild src/index.ts --bundle --outfile=build/index.js --minify"
