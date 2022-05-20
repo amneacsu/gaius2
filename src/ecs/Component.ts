@@ -1,3 +1,3 @@
-export class Component {
+export abstract class Component {
 
 }
